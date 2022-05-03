@@ -10,31 +10,28 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import tool.WordCount2;
 
 @Log4j
-public class ResultCount extends Configuration implements Tool {
+public class ResultCount2 extends Configuration implements Tool {
 
     // 맵리듀스 실행 함수
     public static void main(String[] args) throws Exception {
 
-        // 파라미터는 분석할 파일(폴더)과 분석 결과가 저장될 파일(폴더)로 2개를 받음
-        if (args.length != 2) {
-            System.out.printf("분석할 폴더(파일) 및 분석 결과가 저장될 폴더를 입력해야 합니다.");
+        // 파라미터는 분석할 파일(폴더)과 분석 결과가 저장될 파일(폴더), 전송 결과 코드 3개를 받음
+        if (args.length != 3) {
+            log.info("분석할 폴더(파일) 및 분석 결과가 저장될 폴더를 입력해야 합니다.");
             System.exit(-1);
 
         }
 
-        int exitCode = ToolRunner.run(new ResultCount(), args);
+        int exitCode = ToolRunner.run(new ResultCount2(), args);
 
         System.exit(exitCode);
     }
 
     @Override
     public void setConf(Configuration configuration){
-         configuration.set("AppName", "Send Result");
-
-         configuration.set("resultCode","200");
+         configuration.set("AppName", "Send Result2");
     }
 
     @Override
@@ -51,6 +48,9 @@ public class ResultCount extends Configuration implements Tool {
     public int run(String[] args) throws Exception {
 
         Configuration conf = this.getConf();
+
+        conf.set("resultCode",args[2]);
+
         String appName = conf.get("AppName");
 
         log.info("appName : " + appName);
@@ -60,7 +60,7 @@ public class ResultCount extends Configuration implements Tool {
         Job job = Job.getInstance(conf);
 
         // 맵리듀스 잡이 시작되는 main 함수가 존재하는 파일 설정
-        job.setJarByClass(ResultCount.class);
+        job.setJarByClass(ResultCount2.class);
 
         // 맵리듀스 잡 이름 설정, 리소스 매니저 등 맵리듀스 실행 결과 및 로그 확인할 때 편리
         job.setJobName(appName);
