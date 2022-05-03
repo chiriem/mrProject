@@ -1,5 +1,7 @@
 package ip;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -18,7 +20,8 @@ public class IPCountMapper extends Mapper<LongWritable, Text, Text, IntWritable>
         int forCnt = 0;
 
         for (String word : line.split("\\W+")) {
-            if (word.length()>0) {
+            boolean ip_check = Pattern.matches("^[0-9]{1,3}$", word);
+            if (ip_check) {
                 forCnt++;
                 ip += (word + ".");
                 if (forCnt == 4) {
